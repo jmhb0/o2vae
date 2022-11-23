@@ -15,7 +15,7 @@ class E2SFCNN(torch.nn.Module):
                  layer_type: str = "inducedgated_norm",
                  N=-3,              # determines group if >0. If <0, used in FlipRot2dOnR2 maximum_frequency)
                  restrict: int = -1,
-                 c_dims = [16,24,32,32,48,64],
+                 cnn_dims = [6,9,12,12,19,25],
                  fix_param: bool = False,
                  fco: float = 0.8,
                  J: int = 0,
@@ -24,9 +24,11 @@ class E2SFCNN(torch.nn.Module):
                  antialias: float = 0.,
                  sgsize: int = None,
                  flip: bool = True,
+                 **kwargs,
                  ):
         
         super(E2SFCNN, self).__init__()
+        c_dims = cnn_dims
         assert len(c_dims)==6, "this model has hardcoded 6 cnn layers ... cnn_dims " \
                 "must be length 6. \nConotrol model capacity by changing filters per "\
                 "layer, and not number of filters"

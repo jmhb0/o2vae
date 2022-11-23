@@ -3,8 +3,17 @@ import torchvision
 import numpy as np
 
 class CnnDecoder(nn.Module):
-    def __init__(self, zdim, cnn_dims = [32,64,128,256], out_channels=1, kernel_size=3, stride=2, padding=1, output_padding=1,
-            last_kernel_size=None,):
+    def __init__(self, 
+            zdim, 
+            cnn_dims = [32,64,128,256], 
+            out_channels=1, 
+            kernel_size=3, 
+            stride=2, 
+            padding=1, 
+            output_padding=1,
+            last_kernel_size=None,
+            **kwargs
+            ):
         """
         Args:
             last_kernel_size (int): allows to control the very last conv layer before output 

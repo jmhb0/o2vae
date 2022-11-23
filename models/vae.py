@@ -7,13 +7,19 @@ from models import align_reconstructions
 importlib.reload(mut)
 
 class VAE(torch.nn.Module):
-    def __init__(self, q_net, p_net, zdim, do_sigmoid=True,
-                 loss_kwargs=dict(
-                     recon_type="bce", beta=0.01, 
-                     align_loss=True, align_fourier=True, do_flip=True, rot_steps=2,
-                     ),
-                 prior_kwargs=dict(prior="standard"), 
-                 mask=None):
+    def __init__(self, 
+            q_net, 
+            p_net, 
+            zdim, 
+            do_sigmoid=True,
+            loss_kwargs=dict(
+                recon_loss_type="bce", beta=0.01, align_loss=True, align_fourier=True, 
+                do_flip=True, rot_steps=2,
+            ),
+            prior_kwargs=dict(prior="standard"), 
+            mask=None,
+            **kwargs
+        ):
         """
         Args:
         rot_steps: discretization of the loss function rotations.
@@ -63,15 +69,18 @@ class VAE(torch.nn.Module):
         valid_priors=['standard','normal','gmm']
         assert self.prior in valid_priors, f"{self.prior} must be one of {valid_priors}"
         if self.prior=='standard':
+            # standard normal N(0,I)
             self.pm=torch.nn.Parameter(torch.zeros(1), requires_grad=False)
             self.pv=torch.nn.Parameter(torch.ones(1), requires_grad=False)
 
         elif self.prior=='normal':
+            # Normal with learnable mean and standard deviation (but no covariance), N(\mu, \sigma^2 I)
             self.pm=torch.nn.Parameter(torch.zeros(1), requires_grad=False)+prior_kwargs['pm']
             self.pv=torch.nn.Parameter(torch.ones(1), requires_grad=False)+prior_kwargs['pv']
 
         # mixture of gaussias, with learnable gaussian params, but fixed uniform weigths, k
         elif self.prior=='gmm':
+            # Gaussian mixture prior
             assert 'k' in prior_kwargs.keys(), "prior 'gmm' needs 'k' "
             self.k=prior_kwargs['k']
             # gaussian params
@@ -114,7 +123,7 @@ class VAE(torch.nn.Module):
     
     def loss_recon(self, x, y):
         """ 
-        Reconstruction using loss type self.loss_kwargs['recon_type'] which 
+        Reconstruction using loss type self.loss_kwargs['recon_loss_type'] which 
         by default is binary cross entropy. Computes the loss pixel-wise, then 
         sums over the image. Returns one number per image in the batch.
         Args: 
@@ -130,14 +139,14 @@ class VAE(torch.nn.Module):
             # case 1: efficient alignment using Fourier space methods 
             if self.loss_kwargs['align_fourier']: 
                 loss_recon, _ = align_reconstructions.loss_reconstruction_fourier_batch(x,y, 
-                        recon_loss_type=self.loss_kwargs['recon_type'], mask=self.mask)
+                        recon_loss_type=self.loss_kwargs['recon_loss_type'], mask=self.mask)
             # case 2: manually check a discretised set of rotations: more computation time+memory
             else:
                 # get the min loss of all the rotations/flips per image
                 loss_recon, _ = align_reconstructions.loss_smallest_over_rotations(x, y, 
                      rot_steps=self.loss_kwargs.get('rot_steps',2), 
                      do_flip=self.loss_kwargs.get('do_flip',True),
-                     recon_loss_type=self.loss_kwargs['recon_type'],
+                     recon_loss_type=self.loss_kwargs['recon_loss_type'],
                      return_details=0,  mask=self.mask)
 
             
@@ -145,8 +154,8 @@ class VAE(torch.nn.Module):
         else: 
             # standard loss term / not invariant or anything.
             x, y = x.view(len(x),-1), y.view(len(x),-1)
-            if self.loss_kwargs['recon_type']=="bce": loss_func=torch.nn.functional.binary_cross_entropy
-            elif self.loss_kwargs['recon_type']=="mse": loss_func=torch.nn.functional.mse_loss
+            if self.loss_kwargs['recon_loss_type']=="bce": loss_func=torch.nn.functional.binary_cross_entropy
+            elif self.loss_kwargs['recon_loss_type']=="mse": loss_func=torch.nn.functional.mse_loss
             else: raise ValueError()
             loss_recon = loss_func(y, x, reduction='none').sum(1)
 
@@ -231,5 +240,8 @@ class VAE(torch.nn.Module):
         if self.do_sigmoid: 
             y = torch.sigmoid(y)
         # check the spatial dimensions are good (if doing multiclass prediction per pixel, the `c` dim may be different)
-        assert in_shape[-2:]==y.shape[-2:] 
+        assert in_shape[-2:]==y.shape[-2:], "output image different dimension to "\
+            "input image ... probably change the number of layers (cnn_dims) in the decoder"
+
         return x, y, mu, logvar
+

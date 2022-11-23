@@ -4,6 +4,7 @@ import wandb
 from utils import eval_utils
 import utils
 import models
+import numpy as np
 
 def eval_batch(x, model, agg_metrics, train=1):
     """
@@ -100,6 +101,9 @@ def train(epoch, model, loader_train, optimizer, do_wandb=0, do_progress_bar=1,
     model.train()
     model.to(device)
     agg_metrics=dict(n_samples=0, loss=0, loss_recon=0, loss_kl=0, beta=0)
+
+    wandb.config['data']['n_loader_train'] = len(loader_train)
+    wandb.config['data']['n_pixels'] = np.product(loader_train.dataset[0][0].shape)
 
     # flag to log gradients and params. Do logging at freq c.logging.train_batch_freq
     # from log file, which is the same freq we log metrics
