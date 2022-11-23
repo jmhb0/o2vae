@@ -130,7 +130,7 @@ if __name__ == "__main__":
             run_loops.valid(epoch, model, loader_test, do_progress_bar=config.logging.do_progress_bar,
                     do_wandb=config.do_logging, device=device)
         
-        if config.do_logging and epoch%c.logging.checkpoint_epoch==0:
+        if config.do_logging and epoch%config.logging.checkpoint_epoch==0:
             # by default, overwrite the old model each time
             fname = os.path.join(wandb.run.dir, f"model.pt")
             model.train()
