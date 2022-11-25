@@ -14,16 +14,16 @@ This repo contains code and demos for our paper ["Learning orientation-invariant
 [Citation](#citation)
 
 ## <a name="method"/> Background and method
-In morphologic profiling for cell biology, we want to map image of centered cells or organelles to a vector of numbers (a profile/representation/embedding). We then use those vectors for analyses like clustering, classification, outlier detection, dimensionality reduction, and visualization. 
+In morphologic profiling for cell biology, we want to map image of centered cells or organelles to a vector of numbers (a profile/representation/embeddings/features). We then use those vectors for analyses like clustering, classification, outlier detection, dimensionality reduction, and visualization. 
 ![image - paper Fig.1b](./assets/representation_learning_tasks.png)
 
 If we naively apply unsupervised learning methods like PCA or autoencoders, then rotating the image changes the representation vector. 
 ![image vae orientation-sensitivity](./assets/orientation_sensitive_representation.png)
 
-Our method representation learning method, O2-VAE, forces the embeddings to be the same under any rotation or flip (this is the group O(2) of orthogonal transforms):
+Our representation learning method, O2-VAE, forces the embeddings to be the same under any rotation or flip (this is the group of orthogonal transforms, called O(2)):
 ![image o2vae invariance](./assets/o2vae-representation.png)
 
-Orientation invariance improves downstream anaylses. For example, we cluster representation spaces learned with (left) and without (right) enforcing orientation invariance. Clusters from O2-invariant representations are based on shape, but clusters from non-invariant representations are sometimes based on orientation as well. 
+Orientation invariance improves downstream anaylses. For example, we cluster representation spaces that were learned with enforced orientation invariance (left) and without enforced orientation invariance (right). Clusters from O2-invariant representations are based on shape, but clusters from non-invariant representations are sometimes based on orientation as well. 
 ![image - good and bad clustering](./assets/mefs_clustering_samples.png)
 
 The O2-VAE is a deep autoencoder that is trained to compress the image to a vector and then to reconstruct it. After training, the compressed vector is used as the morphologic profile. 
@@ -45,9 +45,75 @@ For very simple datasets (e.g. nuclei segmentation masks) a preprocessing method
 
 
 ## <a name="usage1"/> Usage - learning representations 
+### Dependencies 
+```
+  pip install -r requirements.txt
+```
+If using GPUs, check [pythorch](https://pytorch.org/) to install the correct torch and cuda versions. The
 
+### Configuration
+`configs/` has example config files. See the comments of these files for more changing the default data locations, model architecture, loss functions, and logging parameters.
+
+### Datasets 
+The scripts will search a directory (defined in config file `config.data.data_dir`) for datasets. It must have at least `X_train.sav`, which should be a numpy array or torch Tensor containing images of centered objects. The array shape is `(n_samples,n_channels,height,width)`. Optionally, you can have test data, `X_test.sav` for validation during training. You can also provide labels `y_train.sav` and `y_test.sav`.
+
+We provide two demo datasets, [o2-mnist](./data/o2_mnist/README.md) and [MEFS](./data/mefs/README.md). To get these datasets run:
+```
+bash data/generate_o2mnist.py
+bash data/mefs/unzip_mefs.bash
+```
+
+### Scripts 
+```
+bash run.bash
+```
+Edit the script to change which config file to use. The location of output logging files will be printed to screen. 
+
+### Logging and saving models
+We use [weights and biases](https://wandb.ai/) to handle logging. Each run will create a new folder inside `wandb/` with a timestamp in its name. The model weights are saved inside `wandb/<run_name>/files/model.pt` if `config.logging.do_checkpoint=True`.
+
+[optional] To access the wandb dashboard with training metrics, you log in to a weights and biases account and set the configs:  
+```
+config.wandb_log_settings.wandb_anonymous=False` 
+`config.wandb_log_settings.wandb_enbable_cloud_logging=True`
+```
+
+### Running in a notebook
+Examples notebooks for training models are in `notebooks/`. This is mostly the same code as `run.py` but without any logging. 
 
 ## <a name="usage2"/> Usage - using representation for analysis  
+### Recovering trained models 
+You need the same model config in a file `configs/<mu_config>` and you need the directory where your, `fname_model=wandb/<run_name>/files_model.pt`. Then you can recover the model with:
+
+```
+import run
+import torch
+
+from configs.<my_config> import config
+model=run.get_datasets_from_config(config)
+
+fname_model=wandb/<run_name>/files_model.pt`
+saved_model=torch.load(fname_model)
+model.load_state_dict(saved_model['state_dict'])
+```
+
+### Extracting learned features / representations
+Load the dataset from the config information and extract features:
+
+```
+import run 
+import utils
+from configs.<my_config> import config
+
+dset, loader, dset_test, loader_test = run.get_datasets_from_config(config)
+
+embeddings, labels = utils.get_model_embeddings_from_loader(model, loader, return_labels=True)
+embeddings_test, labels_test = utils.get_model_embeddings_from_loader(model, loader_test, return_labels=True)
+```
+Note that downstream analysis only needs the representations; you do not need access to the model. 
+
+### Anlaysis 
+See `examples/` for notebooks with example analysis, which use functions in `analysis/`.
 
 ## <a name="citation"/> Citation
 If this repo contributed to your research, please consider citing our paper:

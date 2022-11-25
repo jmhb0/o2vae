@@ -12,9 +12,11 @@ config = dict(
     do_logging=True, # required for model saving, and metric saving to a local directory. Directory is printed to screen.
     
     data=dict(
-        # default data directrory is one evel up from config.
+        # directory containing data `X_train.sav` and (optionally) `X_test.sav`,`y_train.sav`,`y_test.sav`
         data_dir=os.path.join(dir_parent, "data", "o2_mnist"), 
+        # number of images per batch in torch DataLoader 
         batch_size=256,
+        # number of workers in torch DataLoader
         num_workers=0,
         shuffle_data_loader=False,
         # transforms: torchvision-style transforms on train and test (or `None`)
@@ -26,12 +28,15 @@ config = dict(
     ),
      
     run=dict(
-        epochs=201,
+        # how many iterations through the dataset
+        epochs=101,
+        # whether to test the validation data during training
         do_validation=True,
-        valid_freq=10,  # how frequently to run validation code (ignored if do_validation=False)
-        # eval_freq=10,
+        # how frequently to run validation code (ignored if do_validation=False)
+        valid_freq=10,  
     ),
     
+    # model architecture 
     model=dict(
         name="vae",       # 'vae' is the only option now
         zdim=256,         # vae bottleneck layer
@@ -97,11 +102,7 @@ config = dict(
     ),
     
     logging=dict(
-        do_log_code=1,
-        do_log_gradients_params=0,
-        log_gradients_params_freq=100,
         train_batch_freq=20,          # how many batches between wandb updates
-
         tags=[],
         do_progress_bar=True,         # wheter to show the progress bar when running scripts
         do_checkpoint=True,           # whether to save the model
@@ -109,4 +110,4 @@ config = dict(
         print_verbose=1,              # whether to print logging INFO to stdout.
     ),
 )
-config = utils.Bunch.from_nested_dicts(config)
+config = utils.Bunch.from_nested_dicts(config) # this data structure lets you index it like: `config.data.name` 
