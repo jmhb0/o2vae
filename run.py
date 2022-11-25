@@ -1,4 +1,4 @@
-import torch
+import torch 
 import numpy as np
 import os
 from data.datasets import TensorDatasetWithTransform
@@ -89,7 +89,7 @@ if __name__ == "__main__":
     import importlib
     import sys
     import wandb
-    import run_loops
+    import train_loops
 
     # get the config from the command line argument
     if len(sys.argv)>1:
@@ -133,11 +133,11 @@ if __name__ == "__main__":
 
     print(f"Running for {config.run.epochs} epochs")
     for epoch in range(config.run.epochs):
-        run_loops.train(epoch, model, loader, optimizer, do_progress_bar=config.logging.do_progress_bar, 
+        train_loops.train(epoch, model, loader, optimizer, do_progress_bar=config.logging.do_progress_bar, 
                do_wandb=config.do_logging, device=device)
 
         if config.run.do_validation and epoch%config.run.valid_freq==0:
-            run_loops.valid(epoch, model, loader_test, do_progress_bar=config.logging.do_progress_bar,
+            train_loops.valid(epoch, model, loader_test, do_progress_bar=config.logging.do_progress_bar,
                     do_wandb=config.do_logging, device=device)
         
         if config.do_logging and epoch%config.logging.checkpoint_epoch==0:
