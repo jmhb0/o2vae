@@ -59,12 +59,6 @@ bash data/generate_o2mnist.py
 bash data/mefs/unzip_mefs.bash
 ```
 
-### Scripts 
-```
-bash run.bash
-```
-Edit the script to change which config file to use. The location of output logging files will be printed to screen. 
-
 ### Logging and saving models
 We use [weights and biases](https://wandb.ai/) to handle logging. Each run will create a new folder inside `wandb/<run_name>` containing the saved model in `wandb/<run_name>/files/model.pt` (printed to screen after running). 
 
@@ -73,6 +67,15 @@ We use [weights and biases](https://wandb.ai/) to handle logging. Each run will 
 config.wandb_log_settings.wandb_anonymous=False` 
 config.wandb_log_settings.wandb_enbable_cloud_logging=True`
 ```
+
+### Scripts 
+To train an o2-vae model, edit `./run.bash` to point to the right config file, and run:
+```
+bash run.bash
+```
+**Important** check the terminal for the location of the saved models. Something like:
+> Logging directory is `wandb/<log_dir>`
+
 
 ### Running in a notebook
 Examples notebooks for training models are in `notebooks/`. This is mostly the same code as `run.py` but without any logging. 
