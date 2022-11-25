@@ -10,6 +10,8 @@ from models.encoders_o2.e2scnn import E2SFCNN
 from models.encoders_vanilla.cnn_encoder import CnnEncoder
 from models.decoders.cnn_decoder import CnnDecoder
 
+import warnings
+warnings.filterwarnings('ignore', message='.*aten/src/ATen/native*', ) # filter 2 specific warnings from e2cnn library
 
 def get_datasets_from_config(config):
     assert os.path.isdir(config.data.data_dir), f"config.data.data_dir does not exist"
@@ -59,6 +61,7 @@ def build_model_from_config(config):
     # encoder
     config.model.encoder.n_classes = config.model.zdim*2  # bc vae saves mean and stdDev vecors
     q_net_class=lookup_model[config.model.encoder.name]
+
     q_net = q_net_class(**config.model.encoder)
 
     # decoder
@@ -88,12 +91,14 @@ if __name__ == "__main__":
     import wandb
     import run_loops
 
-    # get the config from the comman line argument
+    # get the config from the command line argument
     if len(sys.argv)>1:
-        module=sys.argv[1]
+        module = sys.argv[1]
     else:
-        module="configs.config_o2mnist" # default if none passed
-    config_module=importlib.import_module("configs.config_o2mnist")
+        raise ValueError("must provide a config, e.g. `python run.py configs.config_o2mnist`")
+
+    print(f"Loading config from {module}")
+    config_module=importlib.import_module(module)
     config=config_module.config
 
     
@@ -102,11 +107,13 @@ if __name__ == "__main__":
     device = 'cuda' if torch.cuda.is_available() else 'cpu'
 
     # get datasets specified by config.data
+    print(f"Loading data from {config.data.data_dir}")
     dset, loader, dset_test, loader_test = get_datasets_from_config(config)
 
     # build the model. here specify the number of channels from the dataset
     config.model.encoder.n_channels=dset[0][0].shape[0]  # image channels
     model = build_model_from_config(config)
+    print("Model details\n", model.model_details())
 
     # optimizer - by default, no lr scheduler
     optimizer = torch.optim.Adam(model.parameters(), lr=config.optimizer.lr)
@@ -120,6 +127,9 @@ if __name__ == "__main__":
                 anonymous=anonymous, project=config.wandb_log_settings.project, 
                 group=config.wandb_log_settings.group)
         print(f"Logging directory is {wandb.run.dir}")
+        print(f"After run is finished, find complete log output in {os.path.join(wandb.run.dir, 'output.log')}")
+        fname_save_model = os.path.join(wandb.run.dir, f"model.pt")
+        print(f"Find saved models in {fname_save_model}")
 
     print(f"Running for {config.run.epochs} epochs")
     for epoch in range(config.run.epochs):
@@ -132,8 +142,7 @@ if __name__ == "__main__":
         
         if config.do_logging and epoch%config.logging.checkpoint_epoch==0:
             # by default, overwrite the old model each time
-            fname = os.path.join(wandb.run.dir, f"model.pt")
-            model.train()
+            model.cpu().train()
             torch.save({'epoch': epoch, 'model_state_dict': model.state_dict(),
-                    'optimizer_state_dict': optimizer.state_dict(),}, fname)
+                    'optimizer_state_dict': optimizer.state_dict(),}, fname_save_model)
 

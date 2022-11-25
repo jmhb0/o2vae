@@ -26,7 +26,7 @@ config = dict(
     ),
      
     run=dict(
-        epochs=51,
+        epochs=201,
         do_validation=True,
         valid_freq=10,  # how frequently to run validation code (ignored if do_validation=False)
         # eval_freq=10,
@@ -34,7 +34,7 @@ config = dict(
     
     model=dict(
         name="vae",       # 'vae' is the only option now
-        zdim=128,         # vae bottleneck layer
+        zdim=256,         # vae bottleneck layer
         channels=1,       # img channels, e.g. 1 for grayscale, 3 for rgb 
         do_sigmoid=True,  # whether to make the output be between [0,1]. Usually True. 
         vanilla=False,    # Regular (vanilla) vae instaed of O2-VAE. If true then set config.model.encoder='cnn' and `config.loss.align_loss=False`
@@ -46,8 +46,8 @@ config = dict(
             # `layer_type`: type of cnn layer (following e2cnn library examples)
             layer_type='inducedgated_norm',   # recommend not changing
             # `N`: Ignored if `name!='o2'`. Negative means the model will be O2-invariant. 
-            #     Again, see (e2cnn library examples)
-            N=-3,   # recommend not changing.  
+            #     Again, see (e2cnn library examples). Recommend not changing.  
+            N=-3,
         ),
         decoder=dict(
             name="cnn_decoder",    # 'cnn' is the ony option

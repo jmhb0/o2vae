@@ -1,7 +1,8 @@
 import torch
 from torch.utils.data import TensorDataset, DataLoader
 import tqdm
-
+from torchvision.utils import make_grid
+import matplotlib.pyplot as plt
 
 def get_model_embeddings_from_loader(model, loader, return_labels=False, 
         do_progress_bar=True, device='cuda'):
@@ -43,6 +44,7 @@ class Bunch(dict):
     From https://stackoverflow.com/questions/38034377/object-like-attribute-access-for-nested-dictionary
     Dictionary subclass whose entries can be accessed by attributes (as well
         as normally).
+    Useful for config objects.
     >>> obj = AttrDict()
     >>> obj['test'] = 'hi'
     >>> print obj.test
@@ -68,3 +70,12 @@ class Bunch(dict):
             return data
         else:
             return cls({key: cls.from_nested_dicts(data[key]) for key in data})
+
+def plot_sample_data(loader, nrow=10, ncol=10, figsize=(9,9), pad_value=0.5):
+    x, y = next(iter(loader))
+    grid = make_grid(x[:nrow*ncol], nrow, pad_value=pad_value).moveaxis(0,2)
+    f,axs = plt.subplots(figsize=figsize)
+    axs.imshow(grid)
+    axs.set_axis_off()
+    plt.close()
+    return f, axs 

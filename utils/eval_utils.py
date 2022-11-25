@@ -61,7 +61,7 @@ def reconstruction_grid(model, x, align=True, nrow=12, ncol=8, device='cuda'):
     if align: 
         # array `align_transforms` is the optimal rotation and flip
         _, align_transforms = align_reconstructions.loss_reconstruction_fourier_batch(
-            x,y, recon_loss_type=model.loss_kwargs['recon_type']
+            x,y, recon_loss_type=model.loss_kwargs['recon_loss_type']
         )
         # flip and rotate
         idxs_flip = np.where(align_transforms[:,1])[0]

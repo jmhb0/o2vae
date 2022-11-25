@@ -25,12 +25,12 @@ def make_cnn_layers(in_channels=1, hidden_dims=[2,4,8,16,32,64], activation='rel
     return cnn_layer
 
 class CnnEncoder(nn.Module):
-    def __init__(self, n_channels, n_classes, c_dims=[2,4,8,16,32,64], 
+    def __init__(self, n_channels, n_classes, cnn_dims=[2,4,8,16,32,64], 
                  activation='elu', do_norm_layer=True, kernel_size=3, stride=2, padding=1,
                  **kwargs
                  ):
         """
-        Simple CNN encoder with len(c_dims) layers. 
+        Simple CNN encoder with len(cnn_dims) layers. 
         
         If using the default kernel_size, stride, and padding, then eEach layer halves 
         the size of the featuremap. It's assumed that the feature maps are 1x1 size after 
@@ -41,10 +41,10 @@ class CnnEncoder(nn.Module):
         """
         super().__init__()
         
-        self.cnn_layers = make_cnn_layers(in_channels=n_channels, hidden_dims=c_dims, 
+        self.cnn_layers = make_cnn_layers(in_channels=n_channels, hidden_dims=cnn_dims, 
                                           kernel_size=kernel_size, stride=stride, padding=padding,
                                           activation=activation, do_norm_layer=do_norm_layer)
-        self.fc_layer = nn.Linear(1*1*c_dims[-1], n_classes)             # expect 1*1 feature maps
+        self.fc_layer = nn.Linear(1*1*cnn_dims[-1], n_classes)             # expect 1*1 feature maps
                 
 
     def forward(self, x):

@@ -8,5 +8,7 @@ OUT_FILE=${SAVE_DIR}logfile_${EXP_NUM}.out
 echo "logging to " $OUT_FILE
 echo 
 
-# send the stdout and stderr to the log file
-python run.py configs.config_o2mnist 2>&1 | tee $OUT_FILE
+python run.py configs.config_mefs | tee $OUT_FILE
+#python run.py configs.config_mefs_vanilla | tee $OUT_FILE
+
+#python run.py configs.config_o2mnist | tee $OUT_FILE

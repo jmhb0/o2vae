@@ -97,8 +97,17 @@ class VAE(torch.nn.Module):
         self.q_params = sum([p.numel() for p in self.q_net.parameters()])
         self.p_params = sum([p.numel() for p in self.p_net.parameters()])
         self.params = self.q_params + self.p_params
-        repr = f"Params: \n encoder {self.q_params:,}\n decoder {self.p_params:,}\n"
+        repr = f"Parameter counts: \n encoder {self.q_params:,}\n decoder {self.p_params:,}\n"
         repr += f" total   {self.q_params+self.p_params:,}"
+        return repr
+
+    def model_details(self):
+        repr = f"Encoder type {type(self.q_net)}\nDecoder type {type(self.p_net)}"
+        repr += f"\nBottleneck dims {self.zdim}"
+        repr += f"\nLoss func: {self.loss_kwargs['recon_loss_type']}, beta={self.loss_kwargs['beta']}"
+        repr += f" loss aligns output: {self.loss_kwargs['align_loss']} "
+        repr += "\n" + self.model_size()
+
         return repr
     
     def sample(self, mu, logvar): 
