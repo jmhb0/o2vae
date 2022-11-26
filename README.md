@@ -66,7 +66,7 @@ config.wandb_log_settings.wandb_anonymous=False`
 config.wandb_log_settings.wandb_enbable_cloud_logging=True`
 ```
 
-### Scripts 
+### Scripts for model training 
 To train an o2-vae model, edit `./run.bash` to point to the right config file, and run:
 ```
 bash run.bash
