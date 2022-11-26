@@ -42,10 +42,13 @@ For very simple datasets (e.g. nuclei segmentation masks) a preprocessing method
 
 ## <a name="usage1"/> Usage - learning representations 
 ### Dependencies 
+Recommended: create a new conda environmant before installing.
 ```
   pip install -r requirements.txt
 ```
-The model training is much faster with access to GPUs, which can be accessed freely using [Colab](https://research.google.com/colaboratory/faq.html). If using them, check [pytorch](https://pytorch.org/) to install the correct torch and cuda versions. 
+Go to [pytorch](https://pytorch.org/) (section "INSTALL PYTORCH") to install the correct torch, torchvision, and cuda versions. 
+
+The model training is much faster with access to GPUs, which can be accessed freely using [Colab](https://research.google.com/colaboratory/faq.html). 
 
 ### Configuration
 `./configs/` has example config files. See the  file's comments for more about changing default data locations, model architecture, loss functions, and logging parameters.
@@ -53,11 +56,6 @@ The model training is much faster with access to GPUs, which can be accessed fre
 ### Datasets 
 The scripts will search a directory (defined in config file `config.data.data_dir`) for datasets. It must have at least `X_train.sav`, which should be a numpy array or torch Tensor containing images of centered objects. The array shape is `(n_samples,n_channels,height,width)`. Optionally, you can have test data, `X_test.sav` for validation during training. You can also provide labels `y_train.sav` and `y_test.sav`.
 
-We provide two demo datasets, [o2-mnist](./data/o2_mnist/README.md) and [MEFS](./data/mefs/README.md). To get these datasets run:
-```
-bash data/generate_o2mnist.py
-bash data/mefs/unzip_mefs.bash
-```
 
 ### Logging and saving models
 We use [weights and biases](https://wandb.ai/) to handle logging. Each run will create a new folder inside `wandb/<run_name>` containing the saved model in `wandb/<run_name>/files/model.pt` (printed to screen after running). 
@@ -76,6 +74,13 @@ bash run.bash
 **Important** check the terminal for the location of the saved models. Something like:
 > Logging directory is `wandb/<log_dir>`
 
+### Demos
+We provide two demo datasets, [o2-mnist](./data/o2_mnist/README.md) and [MEFS](./data/mefs/README.md). To get these datasets run:
+```
+bash data/generate_o2mnist.py
+bash data/mefs/unzip_mefs.bash
+```
+They each have a config file `configs/config_o2mnst.py` and `configs/config_mefs.py`.
 
 ### Running in a notebook
 Examples notebooks for training models are in `notebooks/`. This is mostly the same code as `run.py` but without any logging. 

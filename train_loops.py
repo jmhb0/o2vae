@@ -106,11 +106,6 @@ def train(epoch, model, loader_train, optimizer, do_wandb=0, do_progress_bar=1,
         wandb.config['data']['n_loader_train'] = len(loader_train)
         wandb.config['data']['n_pixels'] = np.product(loader_train.dataset[0][0].shape)
 
-    # flag to log gradients and params. Do logging at freq c.logging.train_batch_freq
-    # from log file, which is the same freq we log metrics
-    if do_wandb and wandb.config['logging']['do_log_gradients_params']:
-        wandb.watch(model, log='all', log_freq=wandb.config['logging']['log_gradients_params_freq'])
-
     if do_progress_bar: t = tqdm.tqdm(loader_train) 
     else: t = loader_train
 
