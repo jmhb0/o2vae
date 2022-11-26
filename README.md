@@ -87,7 +87,7 @@ Examples notebooks for training models are in `notebooks/`. This is mostly the s
 
 ## <a name="usage2"/> Usage - using representation for analysis  
 ### Recovering trained models 
-Take the same model config file, `configs/<mu_config>`, and get saved model location, `fname_model=wandb/<run_name>/files_model.pt`. Then you can recover the model with:
+Take the same model config file, `configs/<my_config>`, and get saved model location, `fname_model=wandb/<run_name>/files_model.pt`. Then you can recover the model with:
 
 ```
 import run
