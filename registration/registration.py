@@ -1,22 +1,10 @@
 """
-Code for the 'alignment' module. Given two input images, find the rotation and 
+Code for the 'registration' module. Given two input images, find the rotation and 
 flip that optimally aligns them in terms of image cross-correlation.
-
-We provide two versions: 
-    1. `loss_reconstruction_fourier_batch` which computes the angle and flip 
-    efficiently by transforming images into Fourier space (see the paper). This
-    function operates on batches, taking advantage of parallelism on GPUs via 
-    torch functions. 
-    2. `loss_smallest_over_rotations` which is the naive approach that is slower 
-    and more memory intensive. It manually generates many rotations of the image 
-    (say 360 copies), checks the 
 
 To use the efficient version (item 1 in the above list) you first need to transform
 the image to polar coords. 
 
-Usage 
-```
-```
 More details, see 
     https://scikit-image.org/docs/stable/auto_examples/registration/plot_register_rotation.html
 """
