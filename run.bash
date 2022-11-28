@@ -1,5 +1,5 @@
 SCRIPT_DIR=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
-SAVE_DIR=${SCRIPT_DIR}/logfiles/
+SAVE_DIR=${SCRIPT_DIR}/wandb/
 
 # get the experiment number based on what logfiles are in the directory and use 
 # it to create a logfile name OUT_FILE
