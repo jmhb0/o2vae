@@ -84,15 +84,16 @@ def eval_slow(epoch, model, loader_train, loader_test, do_wandb=1, device='cuda'
     called less frequently. 
     Do eval methods that are time consuming like plot generating, model fitting 
     and so on. 
+
+    Currently nothing is implemented, but you can use it to save reconstruction grids for example
     """
     if not do_wandb: return
     model.eval()
     with torch.no_grad():
         step=wandb.run.step
-        ## reconstructions 
-        f_recons_train=eval_utils.plot_reconstruction_grid_batches(loader_train, model, n_batches=4, reorient_y=1, device=device)
-        f_recons_test=eval_utils.plot_reconstruction_grid_batches(loader_test, model, n_batches=4, reorient_y=1, device=device)
-        wandb.log(step=step, data=dict(epoch=epoch, f_recons_train=f_recons_train, f_recons_test=f_recons_test))
+        #f_recons_train=utils.
+        #f_recons_test=utils.
+        #wandb.log(step=step, data=dict(epoch=epoch, f_recons_train=f_recons_train, f_recons_test=f_recons_test))
 
 def train(epoch, model, loader_train, optimizer, do_wandb=0, do_progress_bar=1, 
                 device='cuda', batch_lim=None):
@@ -145,6 +146,5 @@ def valid(epoch, model, loader_test, do_wandb=0, do_progress_bar=1,
             loss, agg_metrics = eval_batch(x, model, agg_metrics, train=0)
             # log to wandb 
             log_metrics(epoch, agg_metrics, train=0, do_wandb=do_wandb, do_progress_bar=do_progress_bar, tq=t)
-
 
     return 

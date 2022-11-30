@@ -62,8 +62,8 @@ We use [weights and biases](https://wandb.ai/) to handle logging. Each run will 
 
 [optional] To access the wandb dashboard with training metrics, log in to a weights and biases account and set the config file to:  
 ```
-config.wandb_log_settings.wandb_anonymous=False` 
-config.wandb_log_settings.wandb_enbable_cloud_logging=True`
+config.wandb_log_settings.wandb_anonymous=False 
+config.wandb_log_settings.wandb_enbable_cloud_logging=True
 ```
 
 ### Scripts for model training 
