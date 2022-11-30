@@ -1,6 +1,6 @@
 # usage: 
-#    `python generate_o2mnist.py /path/to/data_dir`
-# In the data_dir directory, will created 2 folders - first `MNIST` (handled by torchvision). 
+#    `python generate_o2mnist.py`
+# In <home>/data/o2_mnist, will created 2 folders - first `MNIST` (handled by torchvision). 
 # and a second, `o2_mnist` which is build from MNIST in the code below. It will have the same 
 # data except rotated and flipped unifornmly at random. '
 
@@ -14,13 +14,15 @@ import torchvision
 import torchvision.transforms as T
 import torchvision.transforms.functional as T_f
 
+"""
 try:
     data_dir = sys.argv[1]
     assert os.path.exists(data_dir)
 except Exception as e:
     print("pass an existing data directory argument: `python generate_o2mnist.py /path/to/data_dir`")
     raise ValueError(e)
-    
+    """
+data_dir = os.path.dirname(os.path.realpath(__file__)) 
 data_dir = os.path.join(data_dir, "o2_mnist")
 print(f"O2-mnist data dir: {data_dir}")
 

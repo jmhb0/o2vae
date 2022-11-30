@@ -77,10 +77,10 @@ bash run.bash
 ### Demos
 We provide two demo datasets, [o2-mnist](./data/o2_mnist/README.md) and [MEFS](./data/mefs/README.md). To get these datasets run:
 ```
-bash data/generate_o2mnist.py
+python data/generate_o2mnist.py
 bash data/mefs/unzip_mefs.bash
 ```
-They each have a config file `configs/config_o2mnst.py` and `configs/config_mefs.py`.
+They each have a config file `configs/config_o2mnst.py` and `configs/config_mefs.py`. A model can be trained using the script above, OR they can be run in notebooks `notebooks/`
 
 ### Running in a notebook
 Examples notebooks for training models are in `notebooks/`. This is mostly the same code as `run.py` but without any logging. 
