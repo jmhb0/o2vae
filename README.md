@@ -1,3 +1,4 @@
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.7388245.svg)](https://doi.org/10.5281/zenodo.7388245) 
 # O2VAE - orientation invariant morphologic profiling for cells and organelles
 
 This repo contains code and demos for our paper ["Learning orientation-invariant representations enables accurate and robust morphologic profiling of cells and organelles"](https://biorxiv.org/). 
