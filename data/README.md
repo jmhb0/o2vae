@@ -1,7 +1,7 @@
 # Demo datasets
 This repo contains two demo datasets, o2-mnist and the MEFs.
-![image - sample data](../assets/demo-data-sample.spng)
-<img src="../assets/demo-data-samples.png" alt="drawing" width="400"/>
+
+<img src="../assets/demo-data-samples.png" alt="drawing" width="550"/>
 
 ## O2-mnist
 This is a modified version of the classic MNIST dataset, but with random flips and rotations. To generate run: 
