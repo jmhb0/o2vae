@@ -13,7 +13,7 @@ This repo contains source code and demos for our paper ["Learning orientation-in
 
 ## <a name="method"/> Background and method
 In phenotypic profiling for cell biology, we want to map images of centered cells or organelles to a vector of numbers (a profile/representation/embeddings/features). We then use those vectors for analyses like clustering, classification, outlier detection, dimensionality reduction, and visualization. 
-![image - paper Fig.1b](./assets/representation_learning_tasks.png)
+![image - paper Fig.1b](./assets/representation_learning_tasks.svg)
 
 If we naively apply unsupervised learning methods like principal component analysis (PCA) or autoencoders, then rotating the image changes the representation vector. 
 ![image vae orientation-sensitivity](./assets/orientation_sensitive_representation.png)
@@ -25,7 +25,7 @@ Orientation invariance improves downstream analyses. For example, we cluster rep
 ![image - good and bad clustering](./assets/mefs_clustering_samples.png)
 
 The O2-VAE is a deep autoencoder that is trained to compress the image to a vector and then reconstruct it. After training, the compressed vector is used as the morphologic profile. 
-![image - o2vae Fig.1a](./assets/o2vae-model.png)
+![image - o2vae Fig.1a](./assets/o2vae-model.svg)
 
 
 ## <a name="contents"> What's in this repo
