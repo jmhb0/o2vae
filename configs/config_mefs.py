@@ -30,7 +30,7 @@ config = dict(
      
     run=dict(
         # how many iterations through the dataset
-        epochs=201,
+        epochs=50,
         # whether to test the validation data during training
         do_validation=True,
         # how frequently to run validation code (ignored if do_validation=False)
@@ -40,7 +40,7 @@ config = dict(
     # model architecture 
     model=dict(
         name="vae",       # 'vae' is the only option now
-        zdim=256,         # vae bottleneck layer
+        zdim=512,         # vae bottleneck layer
         channels=1,       # img channels, e.g. 1 for grayscale, 3 for rgb 
         do_sigmoid=True,  # whether to make the output be between [0,1]. Usually True. 
         vanilla=False,    # Regular (vanilla) vae instaed of O2-VAE. If true then set config.model.encoder='cnn' and `config.loss.align_loss=False`

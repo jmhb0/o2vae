@@ -18,7 +18,7 @@ def get_model_embeddings_from_loader(model, loader, return_labels=False,
             embeddings.append(z)
             if return_labels:
                 labels.append(batch[1])
-    embeddings = torch.cat(embeddings)
+    embeddings = torch.cat(embeddings).cpu()
     if return_labels: labels = torch.cat(labels)
 
     return embeddings, labels

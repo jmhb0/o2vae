@@ -119,7 +119,7 @@ embeddings_test, labels_test = utils.get_model_embeddings_from_loader(model, loa
 Note that downstream analysis only needs the representations; you do not need access to the model. 
 
 ### Anlaysis 
-See `examples/` for notebooks with example analysis, which use functions in `analysis/`.
+See `examples/` for notebooks with example analysis, which use functions in `utils/`.
 
 ## <a name="citation"/> Citation
 If this repo contributed to your research, please consider citing our paper:

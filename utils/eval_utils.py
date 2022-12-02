@@ -3,6 +3,7 @@ from torchvision.utils import make_grid
 from models import align_reconstructions
 import torchvision.transforms as T
 import torchvision.transforms.functional as T_f
+import torchgeometry as tgm
 import numpy as np
 
 def grid_from_2cols(x1, x2, nrow=10, ncol=8, 
@@ -70,3 +71,50 @@ def reconstruction_grid(model, x, align=True, nrow=12, ncol=8, device='cuda'):
 
     grid = grid_from_2cols(x,y, nrow=nrow, ncol=ncol)
     return grid
+
+def rotate_batch(x, angles):
+    """
+    Rotate many images by different angles in a bathch
+    Args
+        x (torch.Tensor): image batch shape (bs, c, y, x)
+        angles (torch.Tensor): shape (bs,) list of angles to rotate `x`
+    """
+    assert len(x)==len(angles)
+    assert x.ndim==4
+    bs = len(x)
+    h, w = x.shape[-2:]
+    center = torch.Tensor([[h,w]]).expand(bs,2) *0#/ 2 + 0.5
+    scale = torch.ones((bs))
+    M = tgm.get_rotation_matrix2d(center, -angles, scale)
+    grid = torch.nn.functional.affine_grid(M, size=x.shape).to(x.device)
+    rotated = torch.nn.functional.grid_sample(x, grid)
+
+    return rotated
+
+def rotated_flipped_xs(x, rot_steps, trans=None, do_flip=True, upsample=0):
+    """
+    x: batch of images (b,c,h,w)
+    rot_steps: number of rotations to try.
+    trans: the list of transformatio ops to apply. The caller may want to precompute
+        this if calling it repeatedly.
+    upsample: If 0 then do nothing. If>0, then upsample by this factor to the
+        original image before performing the transformation, then downsample again after.
+    Returns (len(rots),b,c,h,w)
+    """
+    bs, c, h,w = x.shape
+    angles = torch.arange(0,360, rot_steps)
+    n_angles = len(angles)
+    n_permutations = n_angles*(1+do_flip)
+    # new tensor to hold a permuted (rotated and possibly flipped) versions, size (n_permutaitons,bs,c,y,x)
+    xs = torch.zeros((n_permutations, bs, c,h,w), device=x.device)
+
+    # copy the original angle n_angles time in the 1st dimension, then flatten into one big batch
+    x_expanded = x.unsqueeze(0).expand(n_angles, *x.shape).contiguous().view(n_angles*bs,c,h,w)
+    # copy the angles dimension the same number of times
+    angles = angles.unsqueeze(1).expand(n_angles, bs).flatten()
+    x_expanded = rotate_batch(x_expanded, angles)
+    xs[:n_angles] = x_expanded.view(n_angles, bs, c,h,w).clone()
+    # if doing vflip, then put that in as well
+    if do_flip:
+        xs[n_angles:] = T_f.vflip(x_expanded).view(n_angles, bs, c,h,w)
+    return xs
