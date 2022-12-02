@@ -42,19 +42,11 @@ config = dict(
     ),
     # model architecture
     model=dict(
-<<<<<<< HEAD
         name="vae",       # 'vae' is the only option now
         zdim=512,         # vae bottleneck layer
         channels=1,       # img channels, e.g. 1 for grayscale, 3 for rgb 
         do_sigmoid=True,  # whether to make the output be between [0,1]. Usually True. 
         vanilla=False,    # Regular (vanilla) vae instaed of O2-VAE. If true then set config.model.encoder='cnn' and `config.loss.align_loss=False`
-=======
-        name="vae",  # 'vae' is the only option now
-        zdim=256,  # vae bottleneck layer
-        channels=1,  # img channels, e.g. 1 for grayscale, 3 for rgb
-        do_sigmoid=True,  # whether to make the output be between [0,1]. Usually True.
-        vanilla=False,  # Regular (vanilla) vae instaed of O2-VAE. If true then set config.model.encoder='cnn' and `config.loss.align_loss=False`
->>>>>>> f646eb5c4d9bd683d57303d59635502adf379cbd
         encoder=dict(
             # `name`: 'o2_cnn' for o2-invariant encoder. 'cnn_encoder' for standard cnn encoder.
             name="o2_cnn_encoder",

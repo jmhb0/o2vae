@@ -2,12 +2,9 @@ import numpy as np
 import torch
 import torchvision.transforms as T
 import torchvision.transforms.functional as T_f
-<<<<<<< HEAD
 import torchgeometry as tgm
 import numpy as np
-=======
 from torchvision.utils import make_grid
->>>>>>> f646eb5c4d9bd683d57303d59635502adf379cbd
 
 from models import align_reconstructions
 

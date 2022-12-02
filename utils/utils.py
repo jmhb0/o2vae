@@ -22,14 +22,8 @@ def get_model_embeddings_from_loader(
             embeddings.append(z)
             if return_labels:
                 labels.append(batch[1])
-<<<<<<< HEAD
     embeddings = torch.cat(embeddings).cpu()
     if return_labels: labels = torch.cat(labels)
-=======
-    embeddings = torch.cat(embeddings)
-    if return_labels:
-        labels = torch.cat(labels)
->>>>>>> f646eb5c4d9bd683d57303d59635502adf379cbd
 
     return embeddings, labels
 
