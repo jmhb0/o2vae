@@ -1,5 +1,6 @@
 import torch
 
+
 def kl_normal(qm, qv, pm, pv):
     """
     Method: 2021 Rui Shu
@@ -13,15 +14,19 @@ def kl_normal(qm, qv, pm, pv):
     Return:
         kl: tensor: (batch,): kl between each sample
     """
-    element_wise = 0.5 * (torch.log(pv) - torch.log(qv) + qv / pv + (qm - pm).pow(2) / pv - 1)
+    element_wise = 0.5 * (
+        torch.log(pv) - torch.log(qv) + qv / pv + (qm - pm).pow(2) / pv - 1
+    )
     kl = element_wise.sum(-1)
     return kl
 
+
 def sample_gaussian(mu, logvar):
-    """ Sample the isotropic Gaussian N(0,1) """
-    std = torch.exp(0.5*logvar)
+    """Sample the isotropic Gaussian N(0,1)"""
+    std = torch.exp(0.5 * logvar)
     eps = torch.randn_like(mu)
     return eps * std + mu
+
 
 def log_normal(x, m, v):
     """
@@ -36,15 +41,16 @@ def log_normal(x, m, v):
         log_prob: tensor: (batch_1, batch_2, ..., batch_k): log probability of
             each sample. Note that the summation dimension is not kept
     """
-    log_prob_batch = -0.5* (torch.log(v) + (x-m).pow(2)/v + np.log(2*np.pi))
+    log_prob_batch = -0.5 * (torch.log(v) + (x - m).pow(2) / v + np.log(2 * np.pi))
     log_prob = log_prob_batch.sum(-1)
 
     return log_prob
 
+
 def log_normal_mixture(z, m, v):
     """
     Computes log probability of Gaussian mixture, where we assume a probability
-    of each mixture component. This could be updated to also accept a tensor, k, 
+    of each mixture component. This could be updated to also accept a tensor, k,
     (batch,mix,1) of mixture probabilities.
     Args:
         z: tensor: (batch, dim): Observations
@@ -54,16 +60,17 @@ def log_normal_mixture(z, m, v):
         log_prob: tensor: (batch,): log probability of each sample
     """
     # duplicate z for each
-    assert m.ndim==3
+    assert m.ndim == 3
     b, k, dim = m.shape
     # duplicate z along the k dimension for each batch
     z = z.unsqueeze(1).expand(b, k, dim)
 
     # get the log probability for each k, and then sum over the k components.
-    log_prob_batches = log_normal(z, m, v) # output shape is (b,k)
-    log_prob = log_mean_exp(log_prob_batches, dim=-1) # logsumexp over k
+    log_prob_batches = log_normal(z, m, v)  # output shape is (b,k)
+    log_prob = log_mean_exp(log_prob_batches, dim=-1)  # logsumexp over k
 
     return log_prob
+
 
 def log_sum_exp(x, dim=0):
     """
@@ -79,6 +86,7 @@ def log_sum_exp(x, dim=0):
     new_x = x - max_x.unsqueeze(dim).expand_as(x)
     return max_x + (new_x.exp().sum(dim)).log()
 
+
 def log_mean_exp(x, dim):
     """
     From: 2021 Rui Shu
@@ -90,6 +98,7 @@ def log_mean_exp(x, dim):
         _: tensor: (...): log(mean(exp(x), dim))
     """
     return log_sum_exp(x, dim) - np.log(x.size(dim))
+
 
 def gaussian_parameters(h, dim=-1):
     """
@@ -108,6 +117,7 @@ def gaussian_parameters(h, dim=-1):
     v = F.softplus(h) + 1e-8
     return m, v
 
+
 def duplicate(x, rep):
     """
     Duplicates x along dim=0
@@ -118,5 +128,3 @@ def duplicate(x, rep):
         _: tensor: (batch * rep, ...): Arbitrary replicated tensor
     """
     return x.expand(rep, *x.shape).reshape(-1, *x.shape[1:])
-
-
