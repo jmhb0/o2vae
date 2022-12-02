@@ -122,7 +122,8 @@ class VAE(torch.nn.Module):
             raise ValueError("This function is for smal batches only. "\
                     "Data passed to `embed_data` too big. Use")
         self.eval()
-        z_mu, _ = torch.split(self.q_net(x), self.zdim, dim=1)
+        with torch.no_grad():
+            z_mu, _ = torch.split(self.q_net(x), self.zdim, dim=1)
         return z_mu
 
     def encode(self, x):
