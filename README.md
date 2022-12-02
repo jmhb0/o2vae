@@ -1,8 +1,8 @@
-[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.7388245.svg)](https://doi.org/10.5281/zenodo.7388245)  ![GitHub](https://img.shields.io/github/license/jnirschl/titanic_dvc)
+ ![Black](https://img.shields.io/badge/code%20style-black-000000.svg) [![Python 3.9+](https://img.shields.io/badge/python-3.9+-red.svg)](https://www.python.org/downloads/release/python-360/) ![GitHub](https://img.shields.io/github/license/jmhb0/o2vae) [![MARVL](https://img.shields.io/badge/Stanford-MARVL-820000)](https://marvl.stanford.edu/) [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.7388245.svg)](https://doi.org/10.5281/zenodo.7388245) 
 
 # O2VAE - orientation invariant morphologic profiling for cells and organelles
 
-This repo contains code and demos for our paper ["Learning orientation-invariant representations enables accurate and robust morphologic profiling of cells and organelles"](https://biorxiv.org/). 
+This repo contains source code and demos for our paper ["Learning orientation-invariant representations enables accurate and robust morphologic profiling of cells and organelles"](https://biorxiv.org/). 
 
 ## Contents
 - [Background and Method](#method)
@@ -12,25 +12,25 @@ This repo contains code and demos for our paper ["Learning orientation-invariant
 - [Citation](#citation)
 
 ## <a name="method"/> Background and method
-In morphologic profiling for cell biology, we want to map image of centered cells or organelles to a vector of numbers (a profile/representation/embeddings/features). We then use those vectors for analyses like clustering, classification, outlier detection, dimensionality reduction, and visualization. 
+In phenotypic profiling for cell biology, we want to map images of centered cells or organelles to a vector of numbers (a profile/representation/embeddings/features). We then use those vectors for analyses like clustering, classification, outlier detection, dimensionality reduction, and visualization. 
 ![image - paper Fig.1b](./assets/representation_learning_tasks.png)
 
-If we naively apply unsupervised learning methods like PCA or autoencoders, then rotating the image changes the representation vector. 
+If we naively apply unsupervised learning methods like principal component analysis (PCA) or autoencoders, then rotating the image changes the representation vector. 
 ![image vae orientation-sensitivity](./assets/orientation_sensitive_representation.png)
 
-Our representation learning method, O2-VAE, forces the embeddings to be the same under any rotation or flip (this is the group of orthogonal transforms, called O(2)):
+Our representation learning method, O(2) invariant variational autoencoder (O2-VAE), forces the embeddings to be the same under transformation such as rotation or flip which are known as orthogonal group O(2) transforms:
 ![image o2vae invariance](./assets/o2vae-representation.png)
 
-Orientation invariance improves downstream anaylses. For example, we cluster representation spaces that were learned with enforced orientation invariance (left) and without enforced orientation invariance (right). Clusters from O2-invariant representations are based on shape, but clusters from non-invariant representations are sometimes based on orientation as well. 
+Orientation invariance improves downstream analyses. For example, we cluster representation spaces that were learned with enforced orientation invariance (left) and without enforced orientation invariance (right). Clusters from O2-invariant representations are based on shape, but clusters from non-invariant representations are sometimes based on orientation as well. 
 ![image - good and bad clustering](./assets/mefs_clustering_samples.png)
 
-The O2-VAE is a deep autoencoder that is trained to compress the image to a vector and then to reconstruct it. After training, the compressed vector is used as the morphologic profile. 
+The O2-VAE is a deep autoencoder that is trained to compress the image to a vector and then reconstruct it. After training, the compressed vector is used as the morphologic profile. 
 ![image - o2vae Fig.1a](./assets/o2vae-model.png)
 
 
 ## <a name="contents"> What's in this repo
 **Learning representations: O2-VAE model and training methods**
-Code for defining and training the O2-VAE model based on PyTorch (see [usage - learning](#usage1)).  Orientation invariance is enforced by the model arhcitecure, using the [e2cnn](https://github.com/QUVA-Lab/e2cnn/) library. 
+Code for defining and training the O2-VAE model based on PyTorch (see [usage - learning](#usage1)).  Orientation invariance is enforced by the model architecure, using the [e2cnn](https://github.com/QUVA-Lab/e2cnn/) library. 
 
 **Using representations: analysis and visualization tools for cell biology profiling**
 Notebooks demonstrating example analyses (see [this section](#usage2)). Extracting learned representations from a pretrained model and examples of clustering, outlier detection, classficiation, dimensionality reduction, and visualization. 
@@ -108,7 +108,7 @@ Load the dataset from the config information and extract features:
 
 ```
 import run 
-from utils import utils
+import utils
 from configs.<my_config> import config
 
 dset, loader, dset_test, loader_test = run.get_datasets_from_config(config)
@@ -118,15 +118,15 @@ embeddings_test, labels_test = utils.get_model_embeddings_from_loader(model, loa
 ```
 Note that downstream analysis only needs the representations; you do not need access to the model. 
 
-### Anlaysis 
+### Analysis 
 See `examples/` for notebooks with example analysis, which use functions in `analysis/`.
 
 ## <a name="citation"/> Citation
 If this repo contributed to your research, please consider citing our paper:
 ```
 @article{burgess2023orientation,
-  title={},
-  author={},
+  title={Learning orientation-invariant representations enables accurate and robust morphologic profiling of cells and organelles},
+  author={Burgess, James and Nirschl, Jeffrey J and Zanellati, Maria-Clara, and Cohen, Sarah and Yeung, Serena}},
   journal={biorxiv},
   pages={},
   year={2023},
