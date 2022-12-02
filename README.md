@@ -108,7 +108,7 @@ Load the dataset from the config information and extract features:
 
 ```
 import run 
-import utils
+from utils import utils
 from configs.<my_config> import config
 
 dset, loader, dset_test, loader_test = run.get_datasets_from_config(config)
