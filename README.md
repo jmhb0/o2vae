@@ -12,20 +12,19 @@ This repo contains source code and demos for our paper ["Learning orientation-in
 - [Citation](#citation)
 
 ## <a name="method"/> Background and method
-In phenotypic profiling for cell biology, we want to map images of centered cells or organelles to a vector of numbers (a profile/representation/embeddings/features). We then use those vectors for analyses like clustering, classification, outlier detection, dimensionality reduction, and visualization. 
+In phenotypic profiling for cell biology, we want to map images of centered cells or organelles to a vector of numbers (a profile / representation / embedding / feature). We then use those vectors for analyses like clustering, classification, outlier detection, dimensionality reduction, and visualization:
+
 ![image - paper Fig.1b](./assets/representation_learning_tasks.svg)
 
-If we naively apply unsupervised learning methods like principal component analysis (PCA) or autoencoders, then rotating the image changes the representation vector. 
-![image vae orientation-sensitivity](./assets/orientation_sensitive_representation.png)
+If we naively apply unsupervised learning methods like principal component analysis (PCA) or autoencoders, then rotating the image changes the representation vector (below left). Trying to do clustering with these vectors may give bad results. Instead, we want the output vector to be the same for any rotation or flip of the image (below, right). This is called O(2)-invariance.
 
-Our representation learning method, O(2) invariant variational autoencoder (O2-VAE), forces the embeddings to be the same under transformation such as rotation or flip which are known as orthogonal group O(2) transforms:
-![image o2vae invariance](./assets/o2vae-representation.png)
+<p align="center">
+<img src="./assets/representation-sensitivity.svg" class="center">
+</p>
 
-Orientation invariance improves downstream analyses. For example, we cluster representation spaces that were learned with enforced orientation invariance (left) and without enforced orientation invariance (right). Clusters from O2-invariant representations are based on shape, but clusters from non-invariant representations are sometimes based on orientation as well. 
-![image - good and bad clustering](./assets/mefs_clustering_samples.png)
+Our representation learning method, O2-VAE, enforces O2-invariance. It is a deep autoencoder that is trained to compress the image to a vector and then reconstruct it. After training, the compressed vector is used as the morphologic profile. 
 
-The O2-VAE is a deep autoencoder that is trained to compress the image to a vector and then reconstruct it. After training, the compressed vector is used as the morphologic profile. 
-![image - o2vae Fig.1a](./assets/o2vae-model.svg)
+![image - o2vae Fig.1a](./assets/o2vae-model.png)
 
 
 ## <a name="contents"> What's in this repo
