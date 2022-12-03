@@ -19,7 +19,7 @@ In phenotypic profiling for cell biology, we want to map images of centered cell
 If we naively apply unsupervised learning methods like principal component analysis (PCA) or autoencoders, then rotating the image changes the representation vector (below left). Trying to do clustering with these vectors may give bad results. Instead, we want the output vector to be the same for any rotation or flip of the image (below, right). This is called O(2)-invariance.
 
 <p align="center">
-<img src="./assets/representation-sensitivity.svg" class="center">
+<img src="./assets/representation-sensitivity_v2_86ec4e50_crop.gif" class="center">
 </p>
 
 Our representation learning method, O2-VAE, enforces O2-invariance. It is a deep autoencoder that is trained to compress the image to a vector and then reconstruct it. After training, the compressed vector is used as the morphologic profile. 
