@@ -10,6 +10,5 @@ echo "logging to " $OUT_FILE
 echo 
 
 #python run.py configs.config_mefs | tee $OUT_FILE
-#python run.py configs.config_mefs_vanilla | tee $OUT_FILE
 
 python run.py configs.config_o2mnist | tee $OUT_FILE
