@@ -42,12 +42,17 @@ For very simple datasets (e.g. nuclei segmentation masks) a preprocessing method
 
 
 ## <a name="usage1"/> Usage - learning representations 
-### Dependencies 
-Recommended: create a new conda environmant before installing.
+### Installation 
+We tested the following on linux ubuntu 20.04.5 LTS with Python3.9. Recommend creating a conda environment: 
 ```
-  pip install -r requirements.txt
+conda create --name o2vae python=3.9
+conda activate o2vae
 ```
-Go to [pytorch](https://pytorch.org/) (section "INSTALL PYTORCH") to install the correct torch, torchvision, and cuda versions. 
+Install standard packages (time <5mins):
+```
+pip install -r requirements.txt
+```
+Next go to to [pytorch](https://pytorch.org/) (section "INSTALL PYTORCH") to install the correct torch, torchvision, and cuda versions. As a reference, we save our environment for testing in `environment.yml`.
 
 The model training is much faster with access to GPUs, which can be accessed freely using [Colab](https://research.google.com/colaboratory/faq.html). 
 
