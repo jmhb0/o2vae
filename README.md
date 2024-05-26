@@ -2,7 +2,7 @@
 
 # O2VAE - orientation invariant morphologic profiling for cells and organelles
 
-This repo contains source code and demos for our paper ["Learning orientation-invariant representations enables accurate and robust morphologic profiling of cells and organelles"](https://biorxiv.org/). 
+This repo contains source code and demos for our paper ["Orientation-invariant autoencoders learn robust representations for shape profiling of cells and organelles"](https://www.nature.com/articles/s41467-024-45362-4). 
 
 ## Contents
 - [Background and Method](#method)
@@ -130,13 +130,18 @@ See `examples/` for notebooks with example analysis, which use functions in `uti
 ## <a name="citation"/> Citation
 If this repo contributed to your research, please consider citing our paper:
 ```
-@article{burgess2023orientation,
-  title={Learning orientation-invariant representations enables accurate and robust morphologic profiling of cells and organelles},
-  author={Burgess, James and Nirschl, Jeffrey J and Zanellati, Maria-Clara, and Cohen, Sarah and Yeung, Serena}},
-  journal={biorxiv},
-  pages={},
-  year={2023},
-  publisher={}
+@ARTICLE{Burgess2024-zb,
+  title     = "Orientation-invariant autoencoders learn robust representations
+               for shape profiling of cells and organelles",
+  author    = "Burgess, James and Nirschl, Jeffrey J and Zanellati, Maria-Clara
+               and Lozano, Alejandro and Cohen, Sarah and Yeung-Levy, Serena",
+  journal   = "Nat. Commun.",
+  publisher = "Springer Science and Business Media LLC",
+  volume    =  15,
+  number    =  1,
+  pages     = "1022",
+  month     =  feb,
+  year      =  2024,
 }
 ```
 
