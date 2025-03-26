@@ -65,7 +65,7 @@ def get_datasets_from_config(config):
         )
     else:
         config.run.do_validation = False
-        config.logging(
+        logging.warning(
             f"Did not find 'X_test.sav' and 'y_test.sav' in data_dir. Training will skip validation"
         )
         dset_test, loader_test = None, None
